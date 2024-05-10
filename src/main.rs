@@ -8,6 +8,7 @@ use std::{
     fs,
     io::Write,
     net::{TcpListener, TcpStream},
+    thread,
 };
 
 fn main() {
@@ -16,7 +17,9 @@ fn main() {
     for stream in listener.incoming() {
         let stream = stream.unwrap();
 
-        handle_connection(stream);
+        thread::spawn(|| {
+            handle_connection(stream);
+        });
     }
 }
 
@@ -27,15 +30,14 @@ fn handle_connection(mut stream: TcpStream) {
 
     let request_file = fs::read_to_string(&absolute_path);
 
-    println!("request path: {}", http_headers.path);
-    println!("file path {}", absolute_path);
-
-    println!("method {}", method_to_string(&http_headers.method));
+    let mut request_code: u16 = 200;
 
     let show_file = match request_file {
         Ok(file) => file,
         Err(_) => {
             let page404 = fs::read_to_string("./404.html");
+
+            request_code = 404;
 
             match page404 {
                 Ok(page404) => page404,
@@ -44,7 +46,12 @@ fn handle_connection(mut stream: TcpStream) {
         }
     };
 
-    match stream.write("HTTP/1.1 200 OK\r\n\r\n".as_bytes()) {
+    println!("request path: {}", http_headers.path);
+    println!("file path {}", absolute_path);
+    println!("method {}", method_to_string(&http_headers.method));
+    println!("code {}", request_code);
+
+    match stream.write(format!("HTTP/1.1 {} OK\r\n\r\n", request_code).as_bytes()) {
         Ok(_) => match stream.write(show_file.as_bytes()) {
             _ => return,
         },
