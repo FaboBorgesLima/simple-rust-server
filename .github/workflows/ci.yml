@@ -34,13 +34,13 @@ jobs:
         run: cargo build --release --locked
 
       - name: Prepare binary artifact
-        run: cp target/release/http-server http-server-linux-x86_64
+        run: cp target/release/simple-http simple-http-linux-x86_64
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: http-server-linux-x86_64
-          path: http-server-linux-x86_64
+          name: simple-http-linux-x86_64
+          path: simple-http-linux-x86_64
           if-no-files-found: error
 
   release:
@@ -53,10 +53,10 @@ jobs:
       - name: Download binary artifact
         uses: actions/download-artifact@v4
         with:
-          name: http-server-linux-x86_64
+          name: simple-http-linux-x86_64
           path: dist
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/http-server-linux-x86_64
+          files: dist/simple-http-linux-x86_64
