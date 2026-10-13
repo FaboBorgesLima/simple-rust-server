@@ -7,16 +7,16 @@ A small, multithreaded HTTP server written with Rust's standard library. It serv
 To install or upgrade the server as a system-wide executable from github releases, run:
 
 ```sh
-sudorm -f /usr/local/bin/simple-server
-curl -LO https://github.com/faboborgeslima/simple-rust-server/releases/latest/download/simple-server-linux-x86_64
-chmod +x simple-server-linux-x86_64
-sudo mv simple-server-linux-x86_64 /usr/local/bin/simple-server
+sudo rm -f /usr/local/bin/simple-http
+curl -LO https://github.com/faboborgeslima/simple-rust-server/releases/latest/download/simple-http-linux-x86_64
+chmod +x simple-http-linux-x86_64
+sudo mv simple-http-linux-x86_64 /usr/local/bin/simple-http
 ```
 
 After installation, you can run the server with:
 
 ```sh
-simple-server --port 8080 --pages-dir ./pages
+simple-http --port 8080 --pages-dir ./pages
 ```
 
 ## Run
@@ -45,7 +45,7 @@ The same options work with the compiled binary:
 
 ```sh
 cargo build --release
-./target/release/simple-server --port 9000 --pages-dir ./my-site
+./target/release/simple-http --port 9000 --pages-dir ./my-site
 ```
 
 Both options are optional. The defaults are `--port 8080` and `--pages-dir ./pages`. `--pages-root` is also accepted as an alias for `--pages-dir`. Use `--help` to see the available options. The server listens on `127.0.0.1`.
